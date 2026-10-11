@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inscription – Club de judo</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f7f9;--card:#fff;--tx:#1b1f27;--mut:#5b6472;--ac:#c8102e;--bd:#d9dde3;--ok:#1d7a46}
+:root[data-theme="dark"]{--bg:#14171c;--card:#1d2128;--tx:#eceff4;--mut:#9aa3b2;--ac:#ff4d63;--bd:#343a45;--ok:#4cc28a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171c;--card:#1d2128;--tx:#eceff4;--mut:#9aa3b2;--ac:#ff4d63;--bd:#343a45;--ok:#4cc28a}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;margin:.2em 0}h2{font-size:1.15rem;margin:.2em 0 .6em}h3{font-size:1rem;margin:1.2em 0 .3em}
+.sub{color:var(--mut);margin:0 0 12px}
+.bar{display:flex;gap:4px;margin:12px 0}.bar i{flex:1;height:6px;border-radius:3px;background:var(--bd)}.bar i.on{background:var(--ac)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px}
+label{display:block;margin:10px 0 2px;font-size:.9rem;color:var(--mut)}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number]{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+button,.btn{display:inline-block;padding:10px 16px;border-radius:8px;border:1px solid var(--ac);background:var(--ac);color:#fff;font:inherit;cursor:pointer;text-decoration:none}
+button.sec{background:transparent;color:var(--ac)}button:disabled{opacity:.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:13px/1.4 ui-monospace,Consolas,monospace}
+.note{font-size:.85rem;color:var(--mut)}.err{color:var(--ac);font-size:.9rem}
+.box{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px;margin:10px 0;max-height:220px;overflow:auto}
+.box p{margin:0 0 .8em}.box p:last-child{margin-bottom:0}
+.alert{border-left:4px solid var(--ac);background:var(--bg);border-radius:8px;padding:10px 12px;margin:12px 0}
+.ps{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:8px}
+.chk{display:flex;gap:8px;align-items:flex-start;color:var(--tx);font-size:1rem}.chk input{margin-top:5px}
+.ok{color:var(--ok);font-weight:600}
+a{color:var(--ac)}.btn{color:#fff}
+section{display:none}section.show{display:block}
+#recap img{max-width:220px;border:1px solid var(--bd);background:#fff}
+</style>
+</head>
+<body>
+<main>
+<h1>Inscription – <span id="club"></span></h1>
+<p class="sub">Saison <b id="saison"></b> · à refaire chaque année</p>
+<div class="bar noprint" id="bar"></div>
+
+<section id="s1" class="card">
+<h2>1. Ma fiche d'inscription</h2>
+<label>Prénom</label><input type="text" id="prenom">
+<label>Nom</label><input type="text" id="nom">
+<label>Date de naissance</label><input type="date" id="naiss">
+<label>E-mail</label><input type="email" id="email">
+<label>Téléphone</label><input type="tel" id="tel">
+<div class="row"><button onclick="step1()">Continuer</button></div>
+<p class="err" id="e1"></p>
+</section>
+
+<section id="s2" class="card">
+<h2>2. Pass'Sport</h2>
+<div class="box" style="max-height:none">
+<p><b>Qu'est-ce que le Pass'Sport ?</b> C'est une aide de l'État de <b>50 €</b> qui vient en déduction du prix de l'adhésion à un club sportif. Pour la saison 2026-2027, elle concerne notamment les jeunes de 6 à 17 ans dont la famille est allocataire de la CAF ou de la MSA avec un quotient familial peu élevé, les jeunes en situation de handicap bénéficiaires de l'AEEH ou de l'AAH, et les étudiants boursiers sous conditions. Elle est utilisable pour une inscription faite jusqu'au 31 décembre 2026.</p>
+<p>Les personnes concernées reçoivent un <b>code personnel par e-mail</b> à partir de la mi-septembre. Vous pouvez vérifier votre éligibilité sur <a href="https://pass.sports.gouv.fr" target="_blank" rel="noopener">pass.sports.gouv.fr</a>.</p>
+<p><b>Vous n'avez pas reçu de code ? Vous n'êtes pas concerné(e) :</b> choisissez simplement « Je n'ai pas de Pass'Sport » ci-dessous.</p>
+</div>
+<label class="chk"><input type="radio" name="ps" value="non" checked onchange="psChange()"> Je n'ai pas de Pass'Sport</label>
+<label class="chk"><input type="radio" name="ps" value="oui" onchange="psChange()"> J'ai un code Pass'Sport (jusqu'à 5 personnes)</label>
+<div id="psBox" style="display:none">
+<div class="ps" id="ps0"><input type="text" id="pn0" placeholder="Nom" aria-label="Nom 1"><input type="text" id="pp0" placeholder="Prénom" aria-label="Prénom 1"><input type="text" id="pc0" placeholder="Code Pass'Sport" aria-label="Code Pass'Sport 1"></div>
+<div class="ps" id="ps1" style="display:none"><input type="text" id="pn1" placeholder="Nom" aria-label="Nom 2"><input type="text" id="pp1" placeholder="Prénom" aria-label="Prénom 2"><input type="text" id="pc1" placeholder="Code Pass'Sport" aria-label="Code Pass'Sport 2"></div>
+<div class="ps" id="ps2" style="display:none"><input type="text" id="pn2" placeholder="Nom" aria-label="Nom 3"><input type="text" id="pp2" placeholder="Prénom" aria-label="Prénom 3"><input type="text" id="pc2" placeholder="Code Pass'Sport" aria-label="Code Pass'Sport 3"></div>
+<div class="ps" id="ps3" style="display:none"><input type="text" id="pn3" placeholder="Nom" aria-label="Nom 4"><input type="text" id="pp3" placeholder="Prénom" aria-label="Prénom 4"><input type="text" id="pc3" placeholder="Code Pass'Sport" aria-label="Code Pass'Sport 4"></div>
+<div class="ps" id="ps4" style="display:none"><input type="text" id="pn4" placeholder="Nom" aria-label="Nom 5"><input type="text" id="pp4" placeholder="Prénom" aria-label="Prénom 5"><input type="text" id="pc4" placeholder="Code Pass'Sport" aria-label="Code Pass'Sport 5"></div>
+<div class="row"><button class="sec" id="psAddBtn" onclick="psAdd()">+ Ajouter une personne</button></div>
+<div class="alert"><b>Important :</b> ne vous inscrivez pas tout de suite sur HelloAsso. Après réception de vos codes (à envoyer à l'étape suivante), le club vous enverra par e-mail un <b>code promo</b> à utiliser sur HelloAsso. <b>Attendez ce message avant de payer.</b></div>
+</div>
+<div class="row"><button class="sec" onclick="back()">← Précédent</button><button onclick="step2()">Continuer</button></div>
+<p class="err" id="e2"></p>
+</section>
+
+<section id="s3" class="card">
+<h2>3. Envoyer mes codes Pass'Sport au club</h2>
+<p>Envoyez vos codes au club par e-mail. Le message est déjà rédigé, il vous suffit de l'envoyer.</p>
+<p><a class="btn" id="mailPass" href="#">Écrire au club avec mes codes</a></p>
+<p class="note">Le bouton n'ouvre rien ? Copiez le texte ci-dessous et envoyez-le à <b id="clubMail"></b> (avec <b id="ccMail"></b> en copie) avec comme objet <b id="objMail"></b>.</p>
+<textarea id="passTxtArea" readonly rows="8"></textarea>
+<div class="row"><button class="sec" id="copyBtn" onclick="copyPass()">Copier le texte</button></div>
+<div class="alert"><b>Important :</b> après l'envoi, attendez de recevoir par e-mail le code promo du club avant de vous inscrire sur HelloAsso.</div>
+<div class="row"><button class="sec" onclick="back()">← Précédent</button><button onclick="go(4)">J'ai envoyé mes codes, continuer</button></div>
+</section>
+
+<section id="s4" class="card">
+<h2>4. Inscription à la fédération</h2>
+<p>La licence se valide en <b>deux démarches</b> : l'inscription auprès de la fédération (ici) <b>et</b> le paiement (étape suivante).</p>
+<p><a class="btn" href="https://moncompte.ffjudo.com/" target="_blank" rel="noopener">Créer mon compte FFJudo et récupérer ma licence</a></p>
+<div class="row"><button class="sec" onclick="back()">← Précédent</button><button onclick="go(5)">J'ai terminé, continuer</button></div>
+</section>
+
+<section id="s5" class="card">
+<h2>5. Paiement</h2>
+<div class="alert" id="passinfo" style="display:none"><b>Pass'Sport :</b> vous avez indiqué un code pour <span id="passlist"></span>. <b>N'effectuez pas le paiement sur HelloAsso tout de suite :</b> attendez de recevoir par e-mail le code promo du club, puis utilisez-le lors de votre inscription sur HelloAsso.</div>
+
+<h3>Par carte bancaire (HelloAsso)</h3>
+<p>Plusieurs adhésions dans la famille ? Choisissez le bon tarif pour bénéficier de la remise (valable au sein d'une même famille uniquement).</p>
+<p><a href="https://docs.google.com/document/d/1T6GQWxXfFrMvE_7nNpa4lEqbLd_5y7ZY/edit" target="_blank" rel="noopener">Voir les tarifs</a></p>
+<p><a class="btn" href="#" id="hello" target="_blank" rel="noopener">Payer sur HelloAsso</a></p>
+
+<h3>Par chèque</h3>
+<p>Utilisez la <a href="https://docs.google.com/document/d/1tcd603teIPBy2bC0EWL0T0es_JFkj6Mr/edit?usp=drive_link&amp;ouid=108527797583920283717&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener">procédure papier à imprimer</a>.</p>
+
+<h3>Par chèques-vacances ANCV</h3>
+<p>Utilisez également la <a href="https://docs.google.com/document/d/1tcd603teIPBy2bC0EWL0T0es_JFkj6Mr/edit?usp=drive_link&amp;ouid=108527797583920283717&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener">procédure papier à imprimer</a>.</p>
+
+<h3>Par chèque ANCV Connect</h3>
+<div class="alert"><b>Ne vous inscrivez pas sur HelloAsso.</b> Envoyez un e-mail à <b>flenader47@gmail.com</b> en indiquant le <b>nombre de licences</b> à payer en ANCV Connect. Le club vous répondra par e-mail avec un <b>lien de paiement</b> : attendez ce lien avant de payer.</div>
+<label for="ancvN">Nombre de licences à payer en ANCV Connect</label>
+<input type="number" id="ancvN" min="1" max="10" value="1" style="width:90px" oninput="ancvUpdate()">
+<p><a class="btn" id="ancv" href="mailto:flenader47@gmail.com">Écrire pour payer en ANCV Connect</a></p>
+
+<p class="note" style="margin-top:16px">Les dons au club ouvrent droit à une réduction d'impôt sur le revenu de 66 % du montant versé, dans la limite de 20 % du revenu imposable. <a href="https://www.economie.gouv.fr/particuliers/prelevement-a-la-source-reductions-fiscales-dons-associations" target="_blank" rel="noopener">En savoir plus</a></p>
+<div class="row"><button class="sec" onclick="back()">← Précédent</button><button onclick="recap();go(6)">Terminer</button></div>
+</section>
+
+<section id="s6" class="card">
+<h2>Merci, c'est terminé !</h2>
+<div id="recap"></div>
+<div class="row"><button class="sec" onclick="back()">← Précédent</button><a class="btn" id="mail" href="#">Écrire au club</a></div>
+</section>
+</main>
+
+<script>
+/* ===== À CONFIGURER ===== */
+var CONFIG={
+ club:"Judo Pays d'Ancenis",
+ email:"flenader47@gmail.com",
+ cc:"judoancenis@gmail.com",
+ helloasso:"https://www.helloasso.com/associations/judo-pays-d-ancenis/adhesions/fiche-d-inscription-2025-2026-2/"
+};
+/* ======================== */
+var N=6;
+var $=function(i){return document.getElementById(i)},D={pass:[]},psN=1,cur=1;
+$("club").textContent=CONFIG.club;$("hello").href=CONFIG.helloasso;
+var d=new Date(),y=d.getFullYear(),m=d.getMonth();
+var SAISON=m>=8?y+"-"+(y+1):(y-1)+"-"+y;$("saison").textContent=SAISON;
+
+function go(n){for(var i=1;i<=N;i++)$("s"+i).classList.toggle("show",i===n);
+ var b="";for(var i=1;i<=N;i++)b+='<i class="'+(i<=n?"on":"")+'"></i>';$("bar").innerHTML=b;
+ cur=n;
+ if(n===3)mailInit();if(n===5)payInit();window.scrollTo(0,0)}
+function back(){var n=cur-1;if(n===3&&!(D.pass&&D.pass.length))n=2;if(n>=1)go(n)}
+
+function step1(){
+ D={prenom:$("prenom").value.trim(),nom:$("nom").value.trim(),naiss:$("naiss").value,email:$("email").value.trim(),tel:$("tel").value.trim(),pass:[]};
+ if(!D.prenom||!D.nom||!D.naiss||!D.email){$("e1").textContent="Merci de remplir tous les champs obligatoires.";return}
+ for(var i=0;i<5;i++){if(!$("pn"+i).value)$("pn"+i).value=D.nom}
+ go(2)}
+
+
+/* ---- Pass'Sport ---- */
+function psOui(){return document.querySelector('input[name=ps]:checked').value==="oui"}
+function psChange(){$("psBox").style.display=psOui()?"block":"none"}
+function psAdd(){
+ if(psN>=5)return;
+ $("ps"+psN).style.display="grid";psN++;
+ if(psN>=5)$("psAddBtn").style.display="none"}
+function step2(){
+ var e=$("e2");e.textContent="";D.pass=[];
+ if(psOui()){
+  for(var i=0;i<5;i++){
+   var n=$("pn"+i).value.trim(),p=$("pp"+i).value.trim(),c=$("pc"+i).value.trim();
+   if(!p&&!c)continue;
+   if(!n||!p||!c){e.textContent="Pour chaque personne, indiquez le nom, le prénom et le code Pass'Sport.";return}
+   D.pass.push({nom:n,prenom:p,code:c})}
+  if(!D.pass.length){e.textContent="Indiquez au moins un code, ou choisissez « Je n'ai pas de Pass'Sport ».";return}}
+ go(D.pass.length?3:4)}
+
+/* ---- Envoi des codes par e-mail ---- */
+function passLines(){return D.pass.map(function(p){return p.nom+"\t"+p.prenom+"\t"+p.code}).join("\n")}
+function mailBody(){return "Bonjour,\n\nVoici les codes Pass'Sport pour l'adhésion de "+D.nom+" "+D.prenom+" :\n\n"+passLines()+"\n\nContact : "+D.email+(D.tel?" – "+D.tel:"")+"\n\nMerci de m'envoyer le code promo HelloAsso par retour d'e-mail."}
+function mailInit(){
+ var obj="Pass'Sport – "+D.nom+" "+D.prenom;
+ $("mailPass").href="mailto:"+CONFIG.email+"?cc="+encodeURIComponent(CONFIG.cc)+"&subject="+encodeURIComponent(obj)+"&body="+encodeURIComponent(mailBody());
+ $("clubMail").textContent=CONFIG.email;$("ccMail").textContent=CONFIG.cc;$("objMail").textContent=obj;$("passTxtArea").value=mailBody()}
+function copyPass(){
+ var t=$("passTxtArea");t.select();
+ try{navigator.clipboard.writeText(t.value)}catch(e){document.execCommand("copy")}
+ $("copyBtn").textContent="Copié ✔"}
+
+/* ---- Paiement ---- */
+function passTxt(){return D.pass.map(function(p){return p.nom+" "+p.prenom+" ("+p.code+")"}).join(", ")}
+function payInit(){
+ var has=D.pass&&D.pass.length>0;
+ $("passinfo").style.display=has?"block":"none";
+ $("passlist").textContent=has?passTxt():"";
+ ancvUpdate()}
+function ancvUpdate(){
+ var n=parseInt($("ancvN").value,10);if(!(n>=1))n=1;
+ var txt=n+" licence"+(n>1?"s":"");
+ $("ancv").href="mailto:"+CONFIG.email+"?cc="+encodeURIComponent(CONFIG.cc)+"&subject="+encodeURIComponent("Paiement ANCV Connect – "+txt+" – "+D.prenom+" "+D.nom)+"&body="+encodeURIComponent("Bonjour,\n\nJe souhaite régler par ANCV Connect : "+txt+".\nMerci de m'envoyer le lien de paiement par retour d'e-mail.\n\n"+D.prenom+" "+D.nom)}
+
+/* ---- Récapitulatif ---- */
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function recap(){
+ var h="<p><b>"+esc(D.prenom)+" "+esc(D.nom)+"</b><br>Né(e) le "+esc(D.naiss)+"<br>"+esc(D.email)+(D.tel?" · "+esc(D.tel):"")+"<br>Saison "+SAISON+"</p>";
+ if(D.pass&&D.pass.length)h+="<p><b>Pass'Sport</b> : "+esc(passTxt())+"<br>Attendre le code promo du club par e-mail avant de payer sur HelloAsso.</p>";
+ $("recap").innerHTML=h;
+ $("mail").href="mailto:"+CONFIG.email+"?cc="+encodeURIComponent(CONFIG.cc)+"&subject="+encodeURIComponent("Inscription "+D.prenom+" "+D.nom)+"&body="+encodeURIComponent("Bonjour,\n\n"+D.prenom+" "+D.nom)}
+go(1);
+</script>
+</body>
+</html>
